@@ -68,6 +68,8 @@ define(['controls'], function(controls) {
 
     this.el.toggleClass('walking', this.vel.x !== 0);
     this.el.toggleClass('jumping', this.vel.y < 0);
+    this.el.toggleClass('movingLeft', this.vel.x < 0);
+    this.el.toggleClass('movingRight', this.vel.x > 0);
   };
 
   /**

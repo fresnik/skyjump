@@ -15,7 +15,7 @@ html {
   background: url('http://assets.sbnation.com/assets/1608607/Screen_Shot_2012-08-06_at_12.23.43_PM.jpeg') no-repeat;
   margin-left: -200px;
   margin-top: -300px;
-  border: 1px solid red;
+  border: 1px solid #333;
   background-color: #345;
 }
 
@@ -51,6 +51,7 @@ html {
     
     @include border-radius(110px 110px 0 0);
   }
+
   .l_eye, .r_eye {
     background: #fff;
     width: 20px; height: 20px;
@@ -118,6 +119,14 @@ html {
   &.jumping .l_arm {
     @include transform-origin(50%, 0);
     @include transform(rotate(180deg));
+  }
+
+  &.movingLeft .head {
+    @include transform(rotate(25deg));
+  }
+
+  &.movingRight .head {
+    @include transform(rotate(-25deg));
   }
 }
 

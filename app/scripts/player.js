@@ -41,6 +41,7 @@ define(['controls'], function(controls) {
     this.pos.y += this.vel.y * delta;
 
     // Check collisions
+    this.checkHorizontal();
     this.checkPlatforms(oldY);
     this.checkGameover();
 
@@ -49,6 +50,14 @@ define(['controls'], function(controls) {
 
     this.el.toggleClass('walking', this.vel.x !== 0);
     this.el.toggleClass('jumping', this.vel.y < 0);
+  };
+
+  Player.prototype.checkHorizontal = function() {
+    if (this.pos.x < 0)
+      this.pos.x = this.game.width;
+    else
+    if (this.pos.x > this.game.width)
+      this.pos.x = 0;
   };
 
   Player.prototype.checkPlatforms = function(oldY) {
@@ -72,6 +81,10 @@ define(['controls'], function(controls) {
     if (this.pos.y > EDGE_OF_LIFE) {
       this.game.gameover();
     }
+  };
+
+  Player.prototype.reset = function() {
+    controls.reset();
   };
 
   return Player;

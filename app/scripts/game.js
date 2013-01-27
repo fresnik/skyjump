@@ -8,6 +8,8 @@ define(['player', 'platform'], function(Player, Platform) {
    */
   var Game = function(el) {
     this.el = el;
+    this.width = $('.container').width();
+    this.height = $('.container').height();
     this.platformsEl = el.find('.platforms');
 
     this.player = new Player(this.el.find('.player'), this);
@@ -24,7 +26,8 @@ define(['player', 'platform'], function(Player, Platform) {
     this.platforms = [];
     this.createPlatforms();
 
-    this.player.pos = {x: 700, y: 418};
+    this.player.reset();
+    this.player.pos = {x: 200, y: 418};
 
     // Start game
     this.unfreezeGame();

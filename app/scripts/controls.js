@@ -35,6 +35,14 @@ define([], function() {
     }
   };
 
+  Controls.prototype.reset = function() {
+    // Start with no key pressed
+    for (k in this.keys)
+    {
+      this.keys[k] = false;
+    };
+  };
+
   // Export singleton.
   return new Controls();
 });

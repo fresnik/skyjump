@@ -7,7 +7,9 @@ define([], function() {
     37: 'left',
     38: 'up',
     39: 'right',
-    40: 'down'
+    40: 'down',
+    67: 'c',
+    73: 'i',
   };
 
   /**
@@ -15,7 +17,6 @@ define([], function() {
    * @constructor
    */
   var Controls = function() {
-    this.spacePressed = false;
     this.keys = {};
 
     $(window)

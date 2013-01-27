@@ -69,11 +69,43 @@ define(['player', 'platform'], function(Player, Platform) {
     }));
   };
 
+  Game.prototype.addRandomPlatform = function() {
+    this.addPlatform(new Platform({
+          x: Math.random() * this.width,
+          y: Math.random() * this.height,
+          width: 100,
+          height: 10
+        }));
+  };
+
   Game.prototype.addPlatform = function(platform) {
     this.platforms.push(platform);
     this.platformsEl.append(platform.el);
   };
 
+  Game.prototype.clearAllPlatforms = function()
+  {
+    console.log("Clearing all " + this.platforms.length + " platforms...");
+    this.platforms = [];
+    this.platformsEl.empty();
+    // ground
+    this.addPlatform(new Platform({
+      x: 100,
+      y: this.height - 10,
+      width: 800,
+      height: 10
+    }));
+    console.log("There are now " + this.platforms.length + " platforms.");
+  }
+
+  Game.prototype.listAllPlatforms = function()
+  {
+    console.log("===========");
+    for (var i = 0, p; p = this.platforms[i]; i++)
+    {
+      console.log("Platform at (" + p.rect.x + "," + p.rect.y + ")");
+    }
+  }
   /**
    * Runs every frame. Calculates a delta and allows each game entity to update itself.
    */
@@ -103,7 +135,7 @@ define(['player', 'platform'], function(Player, Platform) {
    * Stop the game and notify user that he has lost.
    */
   Game.prototype.gameover = function() {
-    alert('You are game over!');
+    alert('Game over!');
     this.freezeGame();
 
     var game = this;

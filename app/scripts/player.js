@@ -5,7 +5,6 @@ define(['controls'], function(controls) {
   var PLAYER_SPEED = 300;
   var JUMP_VELOCITY = 1000;
   var GRAVITY = 2500;
-  var EDGE_OF_LIFE;
 
   var transform = $.fx.cssPrefix + 'transform';
 
@@ -14,6 +13,9 @@ define(['controls'], function(controls) {
     this.game = game;
     this.pos = { x: 0, y: 0 };
     this.vel = { x: 0, y: 0 };
+
+    // Let the "death" line be just below the game screen
+    // so the player is out of sight before TOD is announced
     this.EDGE_OF_LIFE = game.height + 2*el.height();
   };
 
@@ -28,10 +30,18 @@ define(['controls'], function(controls) {
       this.vel.x = 0;
     }
 
-    // Jump
-    if (controls.keys.space && this.vel.y === 0) {
-      this.vel.y = -JUMP_VELOCITY;
+    // Generate platforms at random position with space
+    // DEVELOPER STUFF - TODO: BEGIN REMOVE
+    if (controls.keys.space) {
+      this.game.addRandomPlatform();
     }
+    if (controls.keys.i) {
+      this.game.listAllPlatforms();
+    }
+    if (controls.keys.c) {
+      this.game.clearAllPlatforms();
+    }
+    // END OF DEV STUFF, TODO: END REMOVE
 
     // Gravity
     this.vel.y += GRAVITY * delta;

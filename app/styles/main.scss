@@ -1,46 +1,60 @@
 @import "compass/css3";
+@import "_animation";
+
+html {
+  background: black;
+}
 
 .container {
-  bottom: 0;
-  left: 0;
-  min-height: 600px;
+  left: 50%;
   overflow: hidden;
   position: absolute;
-  right: 0;
-  top: 0;
+  top: 50%;
+  width: 910px;
+  height: 479px;
+  background: url('http://assets.sbnation.com/assets/1608607/Screen_Shot_2012-08-06_at_12.23.43_PM.jpeg') no-repeat;
+  margin-left: -455px;
+  margin-top: -240px;
+}
+
+.platform {
+  background-color: teal;
+  position: absolute;
+  @include border-radius(5px);
+  border: 2px solid black;
 }
 
 .player {
+  height: 100px;
+  left: 0;
+  margin-left: -42px;
+  margin-top: -100px;
   position: absolute;
-  left: 100px;
   top: 0;
+  width: 84px;
 
-  div {margin: o; padding: 0;}
+  div {margin: 0; padding: 0;}
   div div {background: #A4CA39; position: relative;}
 
   .android{
-    height: 404px; width: 334px;
-    margin: 100px auto;
+    height: 404px; width: 336px;
     
+    @include transform-origin(0, 0);
+    @include transform(scale(0.248, 0.248));
   }
   .head{
     width: 220px; height: 100px;
     top: 32px;
+    left: 58px;
     
-    border-radius: 110px 110px 0 0;
-    -moz-border-radius: 110px 110px 0 0;
-    -webkit-border-radius: 110px 110px 0 0;
-    
-    -webkit-transition: all 0.1s ease-in;
+    @include border-radius(110px 110px 0 0);
   }
   .l_eye, .r_eye {
     background: #fff;
     width: 20px; height: 20px;
     position: absolute; top: 42px;
     
-    border-radius: 10px;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
+    @include border-radius(10px);
   }
   .l_eye {left: 50px;}
   .r_eye {right: 50px;}
@@ -49,50 +63,71 @@
     width: 6px; height: 50px;
     position: absolute; top: -34px;
     
-    border-radius: 3px;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
+    @include border-radius(3px);
   }
   .l_ant {
     left: 50px;
-    transform: rotate(-30deg);
-    -webkit-transform: rotate(-30deg);
-    -moz-transform: rotate(-30deg);
+    @include transform(rotate(-30deg));
   }
   .r_ant {
     right: 50px;
-    transform: rotate(30deg);
-    -webkit-transform: rotate(30deg);
-    -moz-transform: rotate(30deg);
+    @include transform(rotate(30deg));
   }
 
   .body{
     width: 220px; height: 184px;
     top: 40px;
+    left: 58px;
     
-    border-radius: 0 0 25px 25px;
-    -webkit-border-radius: 0 0 25px 25px;
-    -moz-border-radius: 0 0 25px 25px;
+    @include border-radius(0 0 25px 25px);
   }
 
   .l_arm, .r_arm, .l_leg, .r_leg {
     width: 50px; position: absolute;
-    -webkit-transition: all 0.1s ease-in;
   }
   .l_arm, .r_arm {
     height: 150px;
-    border-radius: 25px;
-    -moz-border-radius: 25px;
-    -webkit-border-radius: 25px;
+    @include transition(all 0.15s);
+    @include border-radius(25px);
   }
   .l_leg, .r_leg {
-    height: 80px; top: 182px;
-    border-radius: 0 0 25px 25px;
-    -moz-border-radius: 0 0 25px 25px;
-    -webkit-border-radius: 0 0 25px 25px;
+    height: 100px; top: 162px;
+    @include transform-origin(50%, 25px);
+    @include border-radius(0 0 25px 25px);
   }
   .l_arm {left: -58px;}
   .r_arm {right: -58px;}
   .l_leg {left: 45px;}
   .r_leg {right: 45px;}
+
+  &.walking .l_leg {
+    @include animation(player-walk-left 0.15s linear infinite alternate);
+  }
+
+  &.walking .r_leg {
+    @include animation(player-walk-right 0.15s 0.15s linear infinite alternate);
+  }
+
+  &.jumping .r_arm {
+    @include transform-origin(50%, 0);
+    @include transform(rotate(-180deg));
+  }
+}
+
+@include keyframes(player-walk-left) {
+  from {
+    @include transform(rotate(0));
+  }
+  to {
+    @include transform(rotate(30deg));
+  }
+}
+
+@include keyframes(player-walk-right) {
+  from {
+    @include transform(rotate(0));
+  }
+  to {
+    @include transform(rotate(-30deg));
+  }
 }

@@ -1,2 +1,5 @@
+.sass-cache
 temp
 dist
+build
+html5-game.xcodeproj

@@ -23,7 +23,7 @@ define(['player', 'platform'], function(Player, Platform) {
    */
   Game.prototype.reset = function() {
     // Reset platforms.
-    this.platforms = [];
+    this.clearAllPlatforms();
     this.createPlatforms();
 
     this.player.reset();
@@ -36,35 +36,9 @@ define(['player', 'platform'], function(Player, Platform) {
   Game.prototype.createPlatforms = function() {
     // ground
     this.addPlatform(new Platform({
-      x: 100,
+      x: 0,
       y: this.height - 10,
       width: 800,
-      height: 10
-    }));
-
-    // Floating platforms
-    this.addPlatform(new Platform({
-      x: 300,
-      y: 258,
-      width: 100,
-      height: 10
-    }));
-    this.addPlatform(new Platform({
-      x: 500,
-      y: 288,
-      width: 100,
-      height: 10
-    }));
-    this.addPlatform(new Platform({
-      x: 400,
-      y: 158,
-      width: 100,
-      height: 10
-    }));
-    this.addPlatform(new Platform({
-      x: 750,
-      y: 188,
-      width: 100,
       height: 10
     }));
   };
@@ -78,28 +52,24 @@ define(['player', 'platform'], function(Player, Platform) {
         }));
   };
 
+  /**
+   * Add a single platform to the world
+   * @param {Platform} platform The platform to add
+   */
   Game.prototype.addPlatform = function(platform) {
     this.platforms.push(platform);
     this.platformsEl.append(platform.el);
   };
 
-  Game.prototype.clearAllPlatforms = function()
-  {
-    console.log("Clearing all " + this.platforms.length + " platforms...");
+  /**
+   * Remove all platforms from the world
+   */
+  Game.prototype.clearAllPlatforms = function() {
     this.platforms = [];
     this.platformsEl.empty();
-    // ground
-    this.addPlatform(new Platform({
-      x: 100,
-      y: this.height - 10,
-      width: 800,
-      height: 10
-    }));
-    console.log("There are now " + this.platforms.length + " platforms.");
   }
 
-  Game.prototype.listAllPlatforms = function()
-  {
+  Game.prototype.listAllPlatforms = function() {
     console.log("===========");
     for (var i = 0, p; p = this.platforms[i]; i++)
     {

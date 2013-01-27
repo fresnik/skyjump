@@ -10,11 +10,13 @@ html {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 800px;
-  height: 480px;
+  width: 480px;
+  height: 800px;
   background: url('http://assets.sbnation.com/assets/1608607/Screen_Shot_2012-08-06_at_12.23.43_PM.jpeg') no-repeat;
-  margin-left: -400px;
-  margin-top: -240px;
+  margin-left: -240px;
+  margin-top: -400px;
+  border: 1px solid red;
+  background-color: #345;
 }
 
 .platform {
@@ -111,6 +113,11 @@ html {
   &.jumping .r_arm {
     @include transform-origin(50%, 0);
     @include transform(rotate(-180deg));
+  }
+
+  &.jumping .l_arm {
+    @include transform-origin(50%, 0);
+    @include transform(rotate(180deg));
   }
 }
 

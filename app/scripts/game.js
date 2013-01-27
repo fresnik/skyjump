@@ -37,7 +37,7 @@ define(['player', 'platform'], function(Player, Platform) {
     // ground
     this.addPlatform(new Platform({
       x: 100,
-      y: 418,
+      y: this.height - 10,
       width: 800,
       height: 10
     }));

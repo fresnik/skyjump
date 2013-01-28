@@ -98,8 +98,14 @@ define(['controls'], function(controls) {
       // by the mount the player is going up
       var platforms = this.game.platforms;
 
-      for (var i = 0, p; p = platforms[i]; i++) {
+      for (var i = platforms.length-1, p; p = platforms[i]; i--) {
         p.rect.y -= dY;
+
+        // If the platform has gone blow the visible area, remove it from memory
+        if ( p.rect.y > this.game.height )
+        {
+          this.game.removePlatform( p );
+        }
       }
     }
   };

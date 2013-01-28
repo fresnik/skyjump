@@ -69,6 +69,18 @@ define(['player', 'platform'], function(Player, Platform) {
     this.platformsEl.empty();
   }
 
+  /**
+   * Remove a specific platform from the world
+   */
+  Game.prototype.removePlatform = function(platform) {
+    var idx = this.platforms.indexOf( platform );
+    if ( idx >= 0 )
+    {
+      platform.el.remove();
+      this.platforms.splice( idx, 1 );
+    }
+  }
+
   Game.prototype.listAllPlatforms = function() {
     console.log("===========");
     for (var i = 0, p; p = this.platforms[i]; i++)

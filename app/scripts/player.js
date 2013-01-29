@@ -33,12 +33,6 @@ define(['controls'], function(controls) {
 
     // Generate platforms at random position with space
     // DEVELOPER STUFF - TODO: BEGIN REMOVE
-    if (controls.keys.space) {
-      this.game.addRandomPlatform();
-    }
-    if (controls.keys.i) {
-      this.game.listAllPlatforms();
-    }
     if (controls.keys.c) {
       this.game.reset();
     }

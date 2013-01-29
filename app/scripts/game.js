@@ -12,9 +12,15 @@ define(['player', 'platform'], function(Player, Platform) {
     this.height = $('.container').height();
     this.platformsEl = el.find('.platforms');
     this.visiblePlatforms = 15;
+    this.elevation = 0;
+
+    this.score = 0;
+    this.scoreEl = this.el.find('.score')[0];
+    this.highScore = 0;
+    this.highScoreEl = this.el.find('.highscore')[0];
 
     this.player = new Player(this.el.find('.player'), this);
-    
+
     // Cache a bound onFrame since we need it each frame.
     this.onFrame = this.onFrame.bind(this);
   };
@@ -23,6 +29,10 @@ define(['player', 'platform'], function(Player, Platform) {
    * Reset all game state for a new game.
    */
   Game.prototype.reset = function() {
+    this.elevation = 0;
+    this.updateScore( 0 );
+    $('.container').css('background-position', "0px 0px");
+
     // Reset platforms.
     this.clearAllPlatforms();
     this.createPlatforms();
@@ -54,7 +64,7 @@ define(['player', 'platform'], function(Player, Platform) {
           }));
     }
     // Create another bunch of unseen platforms above the game are
-    for ( var i = 0; i < this.visiblePlatforms; i++ )
+    for ( i = 0; i < this.visiblePlatforms; i++ )
     {
       this.addRandomPlatform();
     }
@@ -101,19 +111,13 @@ define(['player', 'platform'], function(Player, Platform) {
     }
   }
 
-  Game.prototype.listAllPlatforms = function() {
-    console.log("===========");
-    for (var i = 0, p; p = this.platforms[i]; i++)
-    {
-      console.log("Platform at (" + p.rect.x + "," + p.rect.y + ")");
-    }
-  }
-
   /**
    * Perform a vertical scroll of the world, moving platforms and
    * background, removing out of sight platforms and adding new ones
    */
   Game.prototype.scrollWorld = function(delta) {
+    this.elevation += -delta;
+
     // Go through all the platforms and move them down
     // by the amount the player is going up
     var platforms = this.platforms;
@@ -125,6 +129,7 @@ define(['player', 'platform'], function(Player, Platform) {
       if ( p.rect.y > this.height )
       {
         this.removePlatform( p );
+        this.updateScore( this.score + 1 );
       }
     }
 
@@ -132,6 +137,10 @@ define(['player', 'platform'], function(Player, Platform) {
     {
       this.addRandomPlatform();
     }
+
+    // Scroll the background, but not as much as platforms, which will
+    // create a parallax effect
+    $('.container').css('background-position', "0px " + (this.elevation / 5) +"px");
   }
   /**
    * Runs every frame. Calculates a delta and allows each game entity to update itself.
@@ -192,6 +201,26 @@ define(['player', 'platform'], function(Player, Platform) {
       requestAnimFrame(this.onFrame);
     }
   };
+
+  /**
+   * Update the score
+   */
+  Game.prototype.updateScore = function(score) {
+    this.score = score;
+    this.scoreEl.innerText = "Score: " + score;
+    if ( score > this.highScore )
+    {
+      this.updateHighScore( score );
+    }
+  };
+
+  /**
+   * Update the highscore
+   */
+  Game.prototype.updateHighScore = function(highScore) {
+    this.highScore = highScore;
+    this.highScoreEl.innerText = "Highscore: " + this.highScore;
+  }
 
   /**
    * Cross browser RequestAnimationFrame

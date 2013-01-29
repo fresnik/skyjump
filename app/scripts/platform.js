@@ -15,6 +15,9 @@ define(function() {
     });
   };
 
+  Platform.defaultWidth = 50;
+  Platform.defaultHeight = 10;
+
   Platform.prototype.onFrame = function(delta) {
     // Movement?
   };

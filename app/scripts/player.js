@@ -16,7 +16,7 @@ define(['controls'], function(controls) {
 
     // Let the "death" line be just below the game screen
     // so the player is out of sight before TOD is announced
-    this.EDGE_OF_LIFE = game.height + 2*el.height();
+    this.EDGE_OF_LIFE = game.height + 1.5*el.height();
     this.WORLD_SCROLL_HEIGHT = game.height / 2;
   };
 
@@ -93,20 +93,7 @@ define(['controls'], function(controls) {
 
       var dY = this.pos.y - this.WORLD_SCROLL_HEIGHT;
       this.pos.y = this.WORLD_SCROLL_HEIGHT;
-
-      // Go through all the platforms and move them down
-      // by the mount the player is going up
-      var platforms = this.game.platforms;
-
-      for (var i = platforms.length-1, p; p = platforms[i]; i--) {
-        p.rect.y -= dY;
-
-        // If the platform has gone blow the visible area, remove it from memory
-        if ( p.rect.y > this.game.height )
-        {
-          this.game.removePlatform( p );
-        }
-      }
+      this.game.scrollWorld( dY );
     }
   };
 

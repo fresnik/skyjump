@@ -11,6 +11,7 @@ define(['player', 'platform'], function(Player, Platform) {
     this.width = $('.container').width();
     this.height = $('.container').height();
     this.platformsEl = el.find('.platforms');
+    this.visiblePlatforms = 15;
 
     this.player = new Player(this.el.find('.player'), this);
     
@@ -39,16 +40,35 @@ define(['player', 'platform'], function(Player, Platform) {
       x: 0,
       y: this.height - 15,
       width: this.width - 6,
-      height: 10
+      height: Platform.defaultHeight
     }));
+
+    // A few random platforms to start the game
+    for ( var i = 0; i < this.visiblePlatforms; i++ )
+    {
+      this.addPlatform(new Platform({
+            x: Math.random() * (this.width - Platform.defaultWidth),
+            y: Math.random() * (this.height - Platform.defaultHeight) - 2*Platform.defaultHeight,
+            width: Platform.defaultWidth,
+            height: Platform.defaultHeight
+          }));
+    }
+    // Create another bunch of unseen platforms above the game are
+    for ( var i = 0; i < this.visiblePlatforms; i++ )
+    {
+      this.addRandomPlatform();
+    }
   };
 
+  /**
+   * Create new platforms at random spots above the game area
+   */
   Game.prototype.addRandomPlatform = function() {
     this.addPlatform(new Platform({
-          x: Math.random() * this.width,
-          y: Math.random() * this.height,
-          width: 100,
-          height: 10
+          x: Math.random() * (this.width - Platform.defaultWidth),
+          y: Math.random() * (this.height - Platform.defaultHeight) - this.height,
+          width: Platform.defaultWidth,
+          height: Platform.defaultHeight
         }));
   };
 
@@ -88,6 +108,31 @@ define(['player', 'platform'], function(Player, Platform) {
       console.log("Platform at (" + p.rect.x + "," + p.rect.y + ")");
     }
   }
+
+  /**
+   * Perform a vertical scroll of the world, moving platforms and
+   * background, removing out of sight platforms and adding new ones
+   */
+  Game.prototype.scrollWorld = function(delta) {
+    // Go through all the platforms and move them down
+    // by the amount the player is going up
+    var platforms = this.platforms;
+
+    for (var i = platforms.length-1, p; p = platforms[i]; i--) {
+      p.rect.y -= delta;
+
+      // If the platform has gone blow the visible area, remove it from memory
+      if ( p.rect.y > this.height )
+      {
+        this.removePlatform( p );
+      }
+    }
+
+    while ( platforms.length < 2*this.visiblePlatforms )
+    {
+      this.addRandomPlatform();
+    }
+  }
   /**
    * Runs every frame. Calculates a delta and allows each game entity to update itself.
    */
@@ -117,7 +162,6 @@ define(['player', 'platform'], function(Player, Platform) {
    * Stop the game and notify user that he has lost.
    */
   Game.prototype.gameover = function() {
-    alert('Game over!');
     this.freezeGame();
 
     var game = this;

@@ -77,11 +77,10 @@ define(['player', 'platform', 'controls'], function(Player, Platform, controls) 
    * from the currently highest platform.
    */
   Game.prototype.addOnePlatform = function(startingPlatform) {
-    var platformOk;
     do
     {
-      platformOk = true;
-      // Position the platform above the game area unless we have a starting platform
+      var platformOk = true;
+      // Position the platform above the game area unless we have a starting platform (handled below)
       var newPlatformX = Math.random() * (this.width - Platform.defaultWidth);
       var newPlatformY = Math.random() * (this.height + Platform.defaultHeight) - this.height;
 
@@ -102,6 +101,16 @@ define(['player', 'platform', 'controls'], function(Player, Platform, controls) 
       // plus the player's jump distance (no need for parabolic check)
       platformOk = platformOk && ( newPlatformY > this.topmostPlatform.rect.y - this.player.JUMP_DIST );
     } while (!platformOk);
+
+    // Make sure the new platform isn't overlapping with existing platforms
+    for (var i = 0, p; p = this.platforms[i]; i++) {
+      if ( Math.abs(newPlatformX - p.rect.x) <= Platform.defaultWidth &&
+           Math.abs(newPlatformY - p.rect.y) <= Platform.defaultHeight + 4 )
+      {
+        newPlatformY += Platform.defaultHeight;
+        i = 0;
+      }
+    }
 
     var newPlatform = new Platform({
           x: newPlatformX,

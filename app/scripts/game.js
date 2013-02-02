@@ -22,6 +22,7 @@ define(['player', 'platform', 'controls'], function(Player, Platform, controls) 
     this.highScore = 0;
     this.highScoreEl = this.el.find('.highscore .value');
     this.elevationEl = this.el.find('.elevation .value');
+    this.cityscapeEl = this.el.find('.cityscape');
 
     this.player = new Player(this.el.find('.player'), this);
 
@@ -37,6 +38,8 @@ define(['player', 'platform', 'controls'], function(Player, Platform, controls) 
     this.score = 0;
     this.scoreEl.text( 0 );
     this.elevationEl.text( 0 );
+    var transform = $.fx.cssPrefix + 'transform';
+    this.cityscapeEl.css(transform, 'translate(0px,0px)');
     $('.container').css('background-position', "0px 0px");
 
     // Remove all platforms from the world
@@ -196,6 +199,11 @@ define(['player', 'platform', 'controls'], function(Player, Platform, controls) 
     // Scroll the background, but not as much as platforms, which will
     // create a parallax effect
     $('.container').css('background-position', "0px " + (this.elevation / 5) +"px");
+    if (this.elevation / 5 < 250)
+    {
+      var transform = $.fx.cssPrefix + 'transform';
+      this.cityscapeEl.css(transform, 'translate(0px,' + (this.elevation / 5) + 'px)');
+    }
   }
   /**
    * Runs every frame. Calculates a delta and allows each game entity to update itself.

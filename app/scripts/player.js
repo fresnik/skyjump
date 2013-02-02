@@ -108,8 +108,8 @@ define(['controls'], function(controls) {
       // Are we crossing Y.
       if (p.rect.y >= oldY && p.rect.y < pos.y) {
 
-        // Is our X within platform width
-        if (pos.x > p.rect.x && pos.x < p.rect.right) {
+        // Is our X within platform width, add extra invisible boundary
+        if (pos.x > p.rect.x - 5 && pos.x < p.rect.right + 5) {
 
           // Collision. Let's jump!
           pos.y = p.rect.y;

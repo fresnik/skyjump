@@ -18,8 +18,9 @@ define(['controls'], function(controls) {
     // so the player is out of sight before TOD is announced
     this.EDGE_OF_LIFE = game.height + 1.5*el.height();
     this.WORLD_SCROLL_HEIGHT = game.height / 2;
-    this.JUMP_DIST = 175;
   };
+
+  Player.JUMP_DIST = 175;
 
   Player.prototype.onFrame = function(delta) {
 
@@ -57,12 +58,12 @@ define(['controls'], function(controls) {
 
     // Update player position
     this.el.css(transform, 'translate(' + this.pos.x + 'px,' + this.pos.y + 'px)');
+
     // Update platform positions
     // TODO: Optimize, do not do translate unless platform positions are changing
-    var platforms = this.game.platforms;
-    for (var i = 0, p; p = platforms[i]; i++) {
+    this.game.forEachPlatform( function(p) {
       p.el.css(transform, 'translate(' + p.rect.x + 'px,' + p.rect.y + 'px)');
-    }
+    });
 
     this.el.toggleClass('walking', this.vel.x !== 0);
     this.el.toggleClass('jumping', this.vel.y < 0);
@@ -100,20 +101,22 @@ define(['controls'], function(controls) {
    * @param  {number} oldY Last known vertical position of player
    */
   Player.prototype.checkPlatforms = function(oldY) {
-    var platforms = this.game.platforms;
-    for (var i = 0, p; p = platforms[i]; i++) {
+    var pos = this.pos;
+    var vel = this.vel;
+
+    this.game.forEachPlatform( function(p) {
       // Are we crossing Y.
-      if (p.rect.y >= oldY && p.rect.y < this.pos.y) {
+      if (p.rect.y >= oldY && p.rect.y < pos.y) {
 
         // Is our X within platform width
-        if (this.pos.x > p.rect.x && this.pos.x < p.rect.right) {
+        if (pos.x > p.rect.x && pos.x < p.rect.right) {
 
           // Collision. Let's jump!
-          this.pos.y = p.rect.y;
-          this.vel.y = -JUMP_VELOCITY;
+          pos.y = p.rect.y;
+          vel.y = -JUMP_VELOCITY;
         }
       }
-    }
+    });
   };
 
   Player.prototype.checkGameover = function() {

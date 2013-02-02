@@ -124,6 +124,7 @@ define(['controls'], function(controls) {
 
   Player.prototype.reset = function() {
     controls.reset();
+    this.vel.y = 0;
   };
 
   return Player;

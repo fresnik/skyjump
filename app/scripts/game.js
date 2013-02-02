@@ -36,6 +36,7 @@ define(['player', 'platform', 'controls'], function(Player, Platform, controls) 
     this.elevation = 0;
     this.score = 0;
     this.scoreEl.text( 0 );
+    this.elevationEl.text( 0 );
     $('.container').css('background-position', "0px 0px");
 
     // Remove all platforms from the world

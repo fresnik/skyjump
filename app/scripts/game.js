@@ -18,9 +18,10 @@ define(['player', 'platform', 'controls'], function(Player, Platform, controls) 
     this.elevation = 0;
 
     this.score = 0;
-    this.scoreEl = this.el.find('.score')[0];
+    this.scoreEl = this.el.find('.score .value');
     this.highScore = 0;
-    this.highScoreEl = this.el.find('.highscore')[0];
+    this.highScoreEl = this.el.find('.highscore .value');
+    this.elevationEl = this.el.find('.elevation .value');
 
     this.player = new Player(this.el.find('.player'), this);
 
@@ -34,6 +35,7 @@ define(['player', 'platform', 'controls'], function(Player, Platform, controls) 
   Game.prototype.reset = function() {
     this.elevation = 0;
     this.score = 0;
+    this.scoreEl.text( 0 );
     $('.container').css('background-position', "0px 0px");
 
     // Remove all platforms from the world
@@ -161,6 +163,7 @@ define(['player', 'platform', 'controls'], function(Player, Platform, controls) 
    */
   Game.prototype.scrollWorld = function(delta) {
     this.elevation += -delta;
+    this.elevationEl.text( Math.floor( this.elevation ) );
 
     // Go through all the platforms and move them down
     // by the amount the player is going up
@@ -175,11 +178,11 @@ define(['player', 'platform', 'controls'], function(Player, Platform, controls) 
         p.begone();
         self.platformCount--;
         self.score++;
-        self.scoreEl.innerHTML = "Score: " + self.score;
+        self.scoreEl.text( self.score );
         if ( self.score > self.highScore )
         {
           self.highScore = self.score;
-          self.highScoreEl.innerHTML = "Highscore: " + self.highScore;
+          self.highScoreEl.text( self.highScore );
         }
       }
     });

@@ -1,6 +1,6 @@
 /*global define, alert */
 
-define(['player', 'platform'], function(Player, Platform) {
+define(['player', 'platform', 'controls'], function(Player, Platform, controls) {
   /**
    * Main game class.
    * @param {Element} el DOM element containig the game.
@@ -10,6 +10,7 @@ define(['player', 'platform'], function(Player, Platform) {
     this.el = el;
     this.width = $('.container').width();
     this.height = $('.container').height();
+    this.centerX = this.width / 2;
     this.platformsEl = el.find('.platforms');
     this.visiblePlatforms = 15;
     this.elevation = 0;
@@ -38,35 +39,79 @@ define(['player', 'platform'], function(Player, Platform) {
     this.createPlatforms();
 
     this.player.reset();
-    this.player.pos = {x: 200, y: 418};
+    this.player.pos = {x: this.width / 2, y: this.height - 200};
 
     // Start game
     this.unfreezeGame();
   };
 
   Game.prototype.createPlatforms = function() {
+    var groundPlatform = {
+      x: this.centerX - (Platform.defaultWidth / 2),
+      y: this.height - Platform.defaultHeight - 5
+    };
+
     // ground
     this.addPlatform(new Platform({
-      x: 0,
-      y: this.height - 15,
-      width: this.width - 6,
+      x: groundPlatform.x,
+      y: groundPlatform.y,
+      width: Platform.defaultWidth,
       height: Platform.defaultHeight
     }));
+    this.topmostPlatform = this.platforms[0];
 
-    // A few random platforms to start the game
-    for ( var i = 0; i < this.visiblePlatforms; i++ )
+    // Place random platforms until we can reach the top
+    // Also make sure we have the minimal number of visible platforms
+    var canReachTop = false;
+    do
     {
-      this.addPlatform(new Platform({
-            x: Math.random() * (this.width - Platform.defaultWidth),
-            y: Math.random() * (this.height - Platform.defaultHeight) - 2*Platform.defaultHeight,
-            width: Platform.defaultWidth,
-            height: Platform.defaultHeight
-          }));
-    }
-    // Create another bunch of unseen platforms above the game are
-    for ( i = 0; i < this.visiblePlatforms; i++ )
+      this.addOnePlatform(true);
+      canReachTop = canReachTop ||
+          ( this.topmostPlatform.rect.y - this.player.JUMP_DIST + Platform.defaultHeight < 0 );
+    } while (!canReachTop || this.platforms.length < this.visiblePlatforms);
+  };
+
+  /**
+   * Create a platform at a random location, but make sure it's reachable.
+   * A platform can be reached if it is in an inverse double parabolic area
+   * from the currently highest platform.
+   */
+  Game.prototype.addOnePlatform = function(startingPlatform) {
+    var platformOk;
+    do
     {
-      this.addRandomPlatform();
+      platformOk = true;
+      // Position the platform above the game area unless we have a starting platform
+      var newPlatformX = Math.random() * (this.width - Platform.defaultWidth);
+      var newPlatformY = Math.random() * (this.height + Platform.defaultHeight) - this.height;
+
+      // Make sure our inital platforms aren't in the vertical jumping lane
+      // from the player starting position
+      if ( startingPlatform === true )
+      {
+        do
+        {
+          newPlatformY = Math.random() * (this.height - Platform.defaultHeight);
+          platformOk = !((newPlatformX > this.centerX - Platform.defaultWidth)
+          && (newPlatformX < this.centerX + Platform.defaultWidth)
+          && (newPlatformY > 300));
+        } while (!platformOk);
+      }
+
+      // Check if our new platform is higher than the currently highest platform
+      // plus the player's jump distance (no need for parabolic check)
+      platformOk = platformOk && ( newPlatformY > this.topmostPlatform.rect.y - this.player.JUMP_DIST );
+    } while (!platformOk);
+
+    var newPlatform = new Platform({
+          x: newPlatformX,
+          y: newPlatformY,
+          width: Platform.defaultWidth,
+          height: Platform.defaultHeight
+        });
+    this.addPlatform(newPlatform);
+    if ( newPlatformY < this.topmostPlatform.rect.y ) {
+      this.topmostPlatform = newPlatform;
     }
   };
 
@@ -135,7 +180,7 @@ define(['player', 'platform'], function(Player, Platform) {
 
     while ( platforms.length < 2*this.visiblePlatforms )
     {
-      this.addRandomPlatform();
+      this.addOnePlatform(false);
     }
 
     // Scroll the background, but not as much as platforms, which will
@@ -146,7 +191,15 @@ define(['player', 'platform'], function(Player, Platform) {
    * Runs every frame. Calculates a delta and allows each game entity to update itself.
    */
   Game.prototype.onFrame = function() {
+    var gameText = this.el.find('.gameoverarea');
+    gameText.toggleClass('gameover', !this.isPlaying);
+
     if (!this.isPlaying) {
+      if ( controls.keys.space )
+      {
+        this.reset();
+      }
+      requestAnimFrame(this.onFrame);
       return;
     }
 
@@ -172,11 +225,6 @@ define(['player', 'platform'], function(Player, Platform) {
    */
   Game.prototype.gameover = function() {
     this.freezeGame();
-
-    var game = this;
-    setTimeout(function() {
-      game.reset();
-    }, 0);
   };
 
   /**
@@ -207,7 +255,7 @@ define(['player', 'platform'], function(Player, Platform) {
    */
   Game.prototype.updateScore = function(score) {
     this.score = score;
-    this.scoreEl.innerText = "Score: " + score;
+    this.scoreEl.innerHTML = "Score: " + score;
     if ( score > this.highScore )
     {
       this.updateHighScore( score );
@@ -219,7 +267,7 @@ define(['player', 'platform'], function(Player, Platform) {
    */
   Game.prototype.updateHighScore = function(highScore) {
     this.highScore = highScore;
-    this.highScoreEl.innerText = "Highscore: " + this.highScore;
+    this.highScoreEl.innerHTML = "Highscore: " + this.highScore;
   }
 
   /**

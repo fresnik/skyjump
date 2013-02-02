@@ -18,6 +18,7 @@ define(['controls'], function(controls) {
     // so the player is out of sight before TOD is announced
     this.EDGE_OF_LIFE = game.height + 1.5*el.height();
     this.WORLD_SCROLL_HEIGHT = game.height / 2;
+    this.JUMP_DIST = 175;
   };
 
   Player.prototype.onFrame = function(delta) {
@@ -31,10 +32,12 @@ define(['controls'], function(controls) {
       this.vel.x = 0;
     }
 
-    // Generate platforms at random position with space
     // DEVELOPER STUFF - TODO: BEGIN REMOVE
     if (controls.keys.c) {
       this.game.reset();
+    }
+    if ((controls.keys.space) && (this.vel.y === 0)) {
+      this.vel.y = -JUMP_VELOCITY;
     }
     // END OF DEV STUFF, TODO: END REMOVE
 
@@ -55,6 +58,7 @@ define(['controls'], function(controls) {
     // Update player position
     this.el.css(transform, 'translate(' + this.pos.x + 'px,' + this.pos.y + 'px)');
     // Update platform positions
+    // TODO: Optimize, do not do translate unless platform positions are changing
     var platforms = this.game.platforms;
     for (var i = 0, p; p = platforms[i]; i++) {
       p.el.css(transform, 'translate(' + p.rect.x + 'px,' + p.rect.y + 'px)');

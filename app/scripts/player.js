@@ -13,11 +13,6 @@ define(['controls'], function(controls) {
     this.game = game;
     this.pos = { x: 0, y: 0 };
     this.vel = { x: 0, y: 0 };
-
-    // Let the "death" line be just below the game screen
-    // so the player is out of sight before TOD is announced
-    this.EDGE_OF_LIFE = game.height + 1.5*el.height();
-    this.WORLD_SCROLL_HEIGHT = game.height / 2;
   };
 
   Player.JUMP_DIST = 175;
@@ -69,19 +64,6 @@ define(['controls'], function(controls) {
   };
 
   /**
-   * Check if player has moved high enough to scroll the world
-   * @param  {number} oldY Last known vertical position of player
-   */
-  Player.prototype.checkVertical = function(oldY) {
-    if (this.pos.y <= this.WORLD_SCROLL_HEIGHT) {
-
-      var dY = this.pos.y - this.WORLD_SCROLL_HEIGHT;
-      this.pos.y = this.WORLD_SCROLL_HEIGHT;
-      this.game.scrollWorld( dY );
-    }
-  };
-
-  /**
    * Check if player is touching a platform on the way down
    * @param  {number} oldY Last known vertical position of player
    */
@@ -105,7 +87,7 @@ define(['controls'], function(controls) {
   };
 
   Player.prototype.checkGameover = function() {
-    if (this.pos.y > this.EDGE_OF_LIFE) {
+    if (this.pos.y > this.game.viewport.y + this.game.height + 50) {
       this.game.gameover();
     }
   };

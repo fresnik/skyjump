@@ -2,6 +2,8 @@
 
 define(['controls', 'player', 'platform', 'controls'], function(controls, Player, Platform, controls) {
 
+  var VIEWPORT_PADDING = 240;
+
   /**
    * Main game class.
    * @param {Element} el DOM element containig the game.
@@ -14,6 +16,8 @@ define(['controls', 'player', 'platform', 'controls'], function(controls, Player
     this.transform = $.fx.cssPrefix + 'transform';
     this.centerX = this.width / 2;
     this.entities = [];
+    this.worldEl = el.find('.world');
+    this.backgroundEl = el.find('.background');
     this.platformsEl = el.find('.platforms');
     this.platformCount = 0;
     this.visiblePlatforms = 15;
@@ -51,12 +55,14 @@ define(['controls', 'player', 'platform', 'controls'], function(controls, Player
     this.elevationEl.text( 0 );
     this.difficulty = 0;
     this.cityscapeEl.css(this.transform, 'translate(0px,0px)');
-    $('.container').css('background-position', "0px 0px");
+    this.backgroundEl.css(this.transform, 'translate(0px,0px)');
 
     // Remove all platforms from the world
     this.entities.forEach(function(e) { e.el.remove(); });
     this.entities = [];
     this.platformCount = 0;
+
+    this.viewport = {x: 0, y: 0, width: this.width, height: this.height};
 
     // Create starting world entities
     this.createWorld();
@@ -159,49 +165,6 @@ define(['controls', 'player', 'platform', 'controls'], function(controls, Player
   };
 
   /**
-   * Perform a vertical scroll of the world, moving platforms and
-   * background, removing out of sight platforms and adding new ones
-   */
-  Game.prototype.scrollWorld = function(delta) {
-    this.elevation += -delta;
-    this.elevationEl.text( Math.floor( this.elevation ) );
-
-    // Go through all the platforms and move them down
-    // by the amount the player is going up
-    var self = this;
-
-    this.forEachPlatform( function(p) {
-      p.rect.y -= delta;
-      p.el.css(self.transform, 'translate(' + p.rect.x + 'px,' + p.rect.y + 'px)');
-
-      // If the platform has gone blow the visible area, remove it from memory
-      if ( p.rect.y > self.height ) {
-        p.begone();
-        self.platformCount--;
-        self.score++;
-        if ( self.difficulty < 100 ) {
-          self.difficulty++;
-        }
-        self.scoreEl.text( self.score );
-        if ( self.score > self.highScore ) {
-          self.highScore = self.score;
-          self.highScoreEl.text( self.highScore );
-        }
-      }
-    });
-
-    while ( this.platformCount < 2 * this.visiblePlatforms ) {
-      this.addOnePlatform(false);
-    }
-
-    // Scroll the background, but not as much as platforms, which will
-    // create a parallax effect
-    $('.container').css('background-position', "0px " + (this.elevation / 5) +"px");
-    if (this.elevation / 5 < 250) {
-      this.cityscapeEl.css(this.transform, 'translate(0px,' + (this.elevation / 5) + 'px)');
-    }
-  }
-  /**
    * Runs every frame. Calculates a delta and allows each game entity to update itself.
    */
   Game.prototype.onFrame = function() {
@@ -228,8 +191,59 @@ define(['controls', 'player', 'platform', 'controls'], function(controls, Player
       }
     }
 
+    this.updateViewport();
+
     // Request next frame.
     requestAnimFrame(this.onFrame);
+  };
+
+
+  /**
+   * Perform a vertical scroll of the world, moving platforms and
+   * background, removing out of sight platforms and adding new ones
+   */
+  Game.prototype.updateViewport = function() {
+    // Find min Y for player in world coordinates.
+    var minY = this.viewport.y + VIEWPORT_PADDING;
+
+    // Player position
+    var playerY = this.player.pos.y;
+
+    //Update the viewport if needed.
+    if (playerY < minY) {
+      this.elevation += (minY - playerY);
+      this.elevationEl.text( Math.floor( this.elevation ) );
+
+      this.viewport.y = playerY - VIEWPORT_PADDING;
+      while ( this.platformCount < 2 * this.visiblePlatforms ) {
+        this.addOnePlatform(false);
+      }
+      // Scroll the background, but not as much as platforms, which will
+      // create a parallax effect
+      this.backgroundEl.css(this.transform, 'translate(0px,' + (-(this.elevation * 0.2)) + 'px)');
+      this.cityscapeEl.css(this.transform, 'translate(0px,' + (-(this.elevation * 0.75)) + 'px)');
+
+      var self = this;
+
+      this.forEachPlatform( function(p) {
+        // If the platform has gone blow the visible area, remove it from memory
+        if ( p.rect.y > self.viewport.y + self.height ) {
+          p.begone();
+          self.platformCount--;
+          self.score++;
+          if ( self.difficulty < 100 ) {
+            self.difficulty++;
+          }
+          self.scoreEl.text( self.score );
+          if ( self.score > self.highScore ) {
+            self.highScore = self.score;
+            self.highScoreEl.text( self.highScore );
+          }
+        }
+      });
+    }
+
+    this.worldEl.css(this.transform, 'translate(0,' + (-this.viewport.y) + 'px)');
   };
 
   /**

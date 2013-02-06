@@ -10,11 +10,11 @@ html {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 400px;
-  height: 600px;
+  width: 320px;
+  height: 480px;
   background: url('images/cartoon-clouds.png');
-  margin-left: -200px;
-  margin-top: -300px;
+  margin-left: -160px;
+  margin-top: -240px;
   background-color: #345;
 }
 
@@ -27,7 +27,7 @@ html {
     width: 225px;
     height: 66px;
     margin-left: -112px;
-    margin-top: -366px;
+    margin-top: -306px;
     @include transition(all 0.0s linear);
   }
 
@@ -39,11 +39,12 @@ html {
     width: 197px;
     height: 66px;
     margin-left: -98px;
-    margin-top: 300px;
+    margin-top: 240px;
     @include transition(all 0.0s linear);
   }
 
   .pressspacetext {
+    display: hidden;
     background: url('images/pressspace.png') no-repeat; // 172x36px
     position: absolute;
     top: 50%;
@@ -51,23 +52,23 @@ html {
     width: 172px;
     height: 36px;
     margin-left: -86px;
-    margin-top: 380px;
+    margin-top: 320px;
     @include transition(all 0.0s linear);
   }
 
   &.gameover .gametext {
-    @include transform(translate(0px, 300px));
-    @include transition(all 0.5s linear);
+    @include transform(translate(0px, 240px));
+    @include transition(all 0.5s ease-in);
   }
 
   &.gameover .overtext {
-    @include transform(translate(0px, -300px));
-    @include transition(all 0.5s linear);
+    @include transform(translate(0px, -240px));
+    @include transition(all 0.5s ease-in);
   }
 
   &.gameover .pressspacetext {
-    @include transform(translate(0px, -300px));
-    @include transition(all 0.5s linear);
+    @include transform(translate(0px, -240px));
+    @include transition(all 0.5s ease-in);
   }
 }
 
@@ -78,7 +79,7 @@ html {
   position: absolute;
   top: 2px;
   left: 2px;
-  width: 396px;
+  width: 316px;
   background: rgba(0, 0, 0, 0.5);
   font: bold 20px/40px sans-serif;
 
@@ -121,10 +122,10 @@ html {
   position: absolute;
   left: 0;
   bottom: 0;
-  width: 100%;
+  width: 320px;
   height: 250px;
   background: url('images/cityscape.png');
-  background-size: 400px 250px;
+  background-size: 320px 250px;
 }
 
 .player {

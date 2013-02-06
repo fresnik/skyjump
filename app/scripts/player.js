@@ -25,20 +25,11 @@ define(['controls'], function(controls) {
   Player.prototype.onFrame = function(delta) {
 
     // Player input
-    if (controls.keys.right) {
-      this.vel.x = PLAYER_SPEED;
-    } else if (controls.keys.left) {
-      this.vel.x = -PLAYER_SPEED;
-    } else {
-      this.vel.x = 0;
-    }
+    this.vel.x = controls.inputVec.x * PLAYER_SPEED;
 
     // DEVELOPER STUFF - TODO: BEGIN REMOVE
     if (controls.keys.c) {
       this.game.reset();
-    }
-    if ((controls.keys.space) && (this.vel.y === 0)) {
-      this.vel.y = -JUMP_VELOCITY;
     }
     // END OF DEV STUFF, TODO: END REMOVE
 
@@ -57,13 +48,7 @@ define(['controls'], function(controls) {
     this.checkGameover();
 
     // Update player position
-    this.el.css(transform, 'translate(' + this.pos.x + 'px,' + this.pos.y + 'px)');
-
-    // Update platform positions
-    // TODO: Optimize, do not do translate unless platform positions are changing
-    this.game.forEachPlatform( function(p) {
-      p.el.css(transform, 'translate(' + p.rect.x + 'px,' + p.rect.y + 'px)');
-    });
+    this.el.css(transform, 'translate3d(' + this.pos.x + 'px,' + this.pos.y + 'px,0)');
 
     this.el.toggleClass('walking', this.vel.x !== 0);
     this.el.toggleClass('jumping', this.vel.y < 0);

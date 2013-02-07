@@ -13,6 +13,10 @@ define(['controls', 'player', 'platform', 'controls'], function(controls, Player
     this.el = el;
     this.width = $('.container').width();
     this.height = $('.container').height();
+    this.mainMenuEl = el.find('.mainmenu');
+    this.gameTextEl = this.el.find('.gameoverarea');
+    this.hudEl = this.el.find('.hud');
+    this.showMenu = true;
     this.transform = $.fx.cssPrefix + 'transform';
     this.centerX = this.width / 2;
     this.entities = [];
@@ -39,8 +43,9 @@ define(['controls', 'player', 'platform', 'controls'], function(controls, Player
   };
 
   Game.prototype.onScreenTouch = function() {
-    if ( !this.isPlaying )
+    if ( !this.isPlaying || this.showMenu )
     {
+      this.showMenu = false;
       this.reset();
     }
   };
@@ -168,8 +173,9 @@ define(['controls', 'player', 'platform', 'controls'], function(controls, Player
    * Runs every frame. Calculates a delta and allows each game entity to update itself.
    */
   Game.prototype.onFrame = function() {
-    var gameText = this.el.find('.gameoverarea');
-    gameText.toggleClass('gameover', !this.isPlaying);
+    this.gameTextEl.toggleClass('gameover', !this.isPlaying);
+    this.mainMenuEl.toggleClass('showmenu', this.showMenu);
+    this.hudEl.toggleClass('showmenu', this.showMenu);
 
     if (!this.isPlaying) {
       requestAnimFrame(this.onFrame);
@@ -180,7 +186,9 @@ define(['controls', 'player', 'platform', 'controls'], function(controls, Player
         delta = now - this.lastFrame;
     this.lastFrame = now;
 
-    controls.onFrame(delta);
+    if (!this.showMenu) {
+      controls.onFrame(delta);
+    }
     this.player.onFrame(delta);
 
     for (var i = 0, e; e = this.entities[i]; i++) {

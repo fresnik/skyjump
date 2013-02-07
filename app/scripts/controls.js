@@ -72,6 +72,9 @@ define([], function() {
 
     var speed = degree / FULL_ANGLE;
     this.tilt = -Math.max(Math.min(speed, 1), -1);
+    if (!navigator.userAgent.match(/android/i)) {
+      this.tilt *= -1;
+    }
   };
 
   Controls.prototype.onFrame = function() {

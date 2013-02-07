@@ -218,10 +218,16 @@ define(['controls', 'player', 'platform', 'controls'], function(controls, Player
       while ( this.platformCount < 2 * this.visiblePlatforms ) {
         this.addOnePlatform(false);
       }
+      var backgroundY = -(this.elevation * 0.2);
+      // Check if we need to re-use background
+      backgroundY = backgroundY - 300 * Math.floor( this.elevation*0.8 / 300 + 1 );
+
       // Scroll the background, but not as much as platforms, which will
       // create a parallax effect
-      this.backgroundEl.css(this.transform, 'translate(0px,' + (-(this.elevation * 0.2)) + 'px)');
-      this.cityscapeEl.css(this.transform, 'translate(0px,' + (-(this.elevation * 0.75)) + 'px)');
+      this.backgroundEl.css(this.transform, 'translate3d(0px,' + backgroundY + 'px,0)');
+      if (this.elevation < 720) {
+        this.cityscapeEl.css(this.transform, 'translate3d(0px,' + (-(this.elevation * 0.75)) + 'px,0)');
+      }
 
       var self = this;
 
@@ -232,7 +238,7 @@ define(['controls', 'player', 'platform', 'controls'], function(controls, Player
           self.platformCount--;
           self.score++;
           if ( self.difficulty < 100 ) {
-            self.difficulty++;
+            self.difficulty += 0.5;
           }
           self.scoreEl.text( self.score );
           if ( self.score > self.highScore ) {
@@ -243,7 +249,7 @@ define(['controls', 'player', 'platform', 'controls'], function(controls, Player
       });
     }
 
-    this.worldEl.css(this.transform, 'translate(0,' + (-this.viewport.y) + 'px)');
+    this.worldEl.css(this.transform, 'translate3d(0,' + (-this.viewport.y) + 'px,0)');
   };
 
   /**

@@ -38,7 +38,6 @@ define(['controls'], function(controls) {
 
     // Check collisions
     this.checkHorizontal();
-    this.checkVertical(oldY);
     this.checkPlatforms(oldY);
     this.checkGameover();
 

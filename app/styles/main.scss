@@ -85,7 +85,6 @@ html {
   }
 
   .pressspacetext {
-    display: hidden;
     background: url('images/pressspace.png') no-repeat; // 172x36px
     position: absolute;
     top: 50%;
@@ -110,6 +109,10 @@ html {
   &.gameover .pressspacetext {
     @include transform(translate(0px, -240px));
     @include transition(all 0.5s ease-in);
+  }
+
+  &.mobile .pressspacetext {
+    display: none;
   }
 }
 

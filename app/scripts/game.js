@@ -303,6 +303,9 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
   Game.prototype.freezeGame = function() {
     this.isPlaying = false;
     this.el.addClass('frozen');
+    if (navigator.userAgent.match(/android/i)) {
+      this.gameTextEl.addClass('mobile');
+    }
   };
 
   /**
@@ -310,8 +313,11 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
    */
   Game.prototype.unfreezeGame = function() {
     if (!this.isPlaying) {
-      this.isPlaying = true;
+      this.isPlaying = true; 
       this.el.removeClass('frozen');
+      if (navigator.userAgent.match(/android/i)) {
+        this.gameTextEl.removeClass('mobile');
+      }
 
       // Restart the onFrame loop
       this.lastFrame = +new Date() / 1000;

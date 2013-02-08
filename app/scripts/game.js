@@ -1,6 +1,7 @@
 /*global define, alert */
 
-define(['controls', 'player', 'platform', 'controls'], function(controls, Player, Platform, controls) {
+define(['controls', 'player', 'platform', 'spring', 'controls'],
+  function(controls, Player, Platform, Spring, controls) {
 
   var VIEWPORT_PADDING = 240;
 
@@ -14,14 +15,15 @@ define(['controls', 'player', 'platform', 'controls'], function(controls, Player
     this.width = $('.container').width();
     this.height = $('.container').height();
     this.mainMenuEl = el.find('.mainmenu');
-    this.gameTextEl = this.el.find('.gameoverarea');
-    this.hudEl = this.el.find('.hud');
+    this.gameTextEl = el.find('.gameoverarea');
+    this.hudEl = el.find('.hud');
     this.showMenu = true;
     this.transform = $.fx.cssPrefix + 'transform';
     this.centerX = this.width / 2;
     this.entities = [];
     this.worldEl = el.find('.world');
     this.backgroundEl = el.find('.background');
+    this.springsEl = el.find('.springs');
     this.platformsEl = el.find('.platforms');
     this.platformCount = 0;
     this.visiblePlatforms = 15;
@@ -43,10 +45,11 @@ define(['controls', 'player', 'platform', 'controls'], function(controls, Player
   };
 
   Game.prototype.onScreenTouch = function() {
-    if ( !this.isPlaying || this.showMenu )
-    {
+    if ( !this.isPlaying || this.showMenu ) {
       this.showMenu = false;
-      this.reset();
+      if ( !this.isPlaying ) {
+        this.reset();
+      }
     }
   };
 
@@ -142,8 +145,17 @@ define(['controls', 'player', 'platform', 'controls'], function(controls, Player
 
     this.addPlatform(newPlatform);
     newPlatform.el.css(this.transform, 'translate(' + newPlatformX + 'px,' + newPlatformY + 'px)');
-    if ( newPlatformY < this.topmostPlatform.rect.y ) {
-      this.topmostPlatform = newPlatform;
+    this.topmostPlatform = newPlatform;
+
+    // Randomly add a spring on top of platform
+    if ( Math.random() < 0.1 )
+    {
+      var newSpring = new Spring({
+        x: newPlatformX + Math.random() * Platform.defaultWidth,
+        y: newPlatformY
+      });
+      this.addSpring(newSpring);
+      newSpring.el.css(this.transform, 'translate(' + newSpring.pos.x + 'px,' + newSpring.pos.y + 'px)');
     }
   };
 
@@ -166,6 +178,16 @@ define(['controls', 'player', 'platform', 'controls'], function(controls, Player
   Game.prototype.addPlatform = function(platform) {
     this.entities.push(platform);
     this.platformsEl.append(platform.el);
+    this.platformCount++;
+  };
+
+  /**
+   * Add a single spring to the world
+   * @param {Spring} spring The spring to add
+   */
+  Game.prototype.addSpring = function(spring) {
+    this.entities.push(spring);
+    this.springsEl.append(spring.el);
     this.platformCount++;
   };
 
@@ -300,6 +322,14 @@ define(['controls', 'player', 'platform', 'controls'], function(controls, Player
   Game.prototype.forEachPlatform = function(fun) {
     for (var i = 0, e; e = this.entities[i]; i++) {
       if (e instanceof Platform) {
+        fun(e);
+      }
+    }
+  };
+
+  Game.prototype.forEachSpring = function(fun) {
+    for (var i = 0, e; e = this.entities[i]; i++) {
+      if (e instanceof Spring) {
         fun(e);
       }
     }

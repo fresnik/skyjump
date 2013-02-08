@@ -39,6 +39,7 @@ define(['controls'], function(controls) {
     // Check collisions
     this.checkHorizontal();
     this.checkPlatforms(oldY);
+    this.checkSprings(oldY);
     this.checkGameover();
 
     // Update player position
@@ -64,7 +65,7 @@ define(['controls'], function(controls) {
 
   /**
    * Check if player is touching a platform on the way down
-   * @param  {number} oldY Last known vertical position of player
+   * @param {Number} oldY Last known vertical position of player
    */
   Player.prototype.checkPlatforms = function(oldY) {
     var pos = this.pos;
@@ -80,6 +81,29 @@ define(['controls'], function(controls) {
           // Collision. Let's jump!
           pos.y = p.rect.y;
           vel.y = -JUMP_VELOCITY;
+        }
+      }
+    });
+  };
+
+  /**
+   * Check if player is touching a spring on the way down
+   * @param {Number} oldY Last known vertical position of player
+   */
+  Player.prototype.checkSprings = function(oldY) {
+    var pos = this.pos;
+    var vel = this.vel;
+
+    this.game.forEachSpring( function(s) {
+      // Are we crossing Y.
+      if (pos.y > oldY && Math.abs(s.pos.y - pos.y) < 16) {
+
+        // Is our X within spring width
+        if (pos.x > s.pos.x - 16 && pos.x < s.pos.x + 16) {
+
+          // Collision. Let's jump extra high!
+          pos.y = s.pos.y;
+          vel.y = -JUMP_VELOCITY*1.5;
         }
       }
     });

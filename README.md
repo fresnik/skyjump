@@ -22,12 +22,12 @@ This game has been tested on:
 - Chrome 24 on Windows 7
 - Firefox 18 on Windows 7
 
-Note: the gamma tilt is handled differently between Android and iPhone.
+Note: the tilt orientation is reversed on some devices - not all devices are supported!
 
 ## List of extra features
 
 - Main menu
-- Parallax scrolling effect
+- Parallax scrolling effect on desktop browsers
 - Starting cityscape
 - Platforms can always be reached
 - Platforms are never placed in the initial "jumping lane" when starting a new game

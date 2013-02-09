@@ -34,7 +34,7 @@ module.exports = function( grunt ) {
         options: {
           css_dir: 'temp/styles',
           sass_dir: 'app/styles',
-          images_dir: 'app/images',
+          images_dir: {'app/images', 'app/styles/images'],
           javascripts_dir: 'temp/scripts',
           force: true
         }
@@ -132,7 +132,7 @@ module.exports = function( grunt ) {
     rev: {
       js: 'scripts/**/*.js',
       css: 'styles/**/*.css',
-      img: 'images/**'
+      img: ['images/**', 'styles/images/**']
     },
 
     // usemin handler should point to the file containing

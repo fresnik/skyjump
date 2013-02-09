@@ -255,10 +255,9 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
       // Scroll the background, but not as much as platforms, which will
       // create a parallax effect
       this.backgroundEl.css(this.transform, 'translate3d(0px,' + backgroundY + 'px,0)');
-      if (this.elevation < 720) {
-        this.cityscapeEl.css(this.transform, 'translate3d(0px,' + (-(this.elevation * 0.75)) + 'px,0)');
-      }
-
+      /*
+      this.cityscapeEl.css(this.transform, 'translate3d(0px,' + (-(this.elevation * 0.75)) + 'px,0)');
+*/
       var self = this;
 
       this.forEachPlatform( function(p) {
@@ -303,7 +302,7 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
   Game.prototype.freezeGame = function() {
     this.isPlaying = false;
     this.el.addClass('frozen');
-    if (navigator.userAgent.match(/android/i)) {
+    if (navigator.userAgent.match(/(android|iphone|ipad)/i)) {
       this.gameTextEl.addClass('mobile');
     }
   };
@@ -315,7 +314,7 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
     if (!this.isPlaying) {
       this.isPlaying = true; 
       this.el.removeClass('frozen');
-      if (navigator.userAgent.match(/android/i)) {
+      if (navigator.userAgent.match(/(android|iphone|ipad)/i)) {
         this.gameTextEl.removeClass('mobile');
       }
 

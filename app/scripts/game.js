@@ -17,6 +17,8 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
     this.mainMenuEl = el.find('.mainmenu');
     this.gameTextEl = el.find('.gameoverarea');
     this.hudEl = el.find('.hud');
+    this.mainMenuEl.addClass('showmenu');
+    this.hudEl.addClass('showmenu');
     this.showMenu = true;
     this.transform = $.fx.cssPrefix + 'transform';
     this.centerX = this.width / 2;
@@ -28,6 +30,7 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
     this.platformCount = 0;
     this.visiblePlatforms = 15;
     this.elevation = 0;
+    this.oldElevation = 0;
     this.difficulty = 0;
 
     this.score = 0;
@@ -39,20 +42,27 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
 
     this.player = new Player(this.el.find('.player'), this);
 
-    this.themesound = new Howl({
-      urls: ['sounds/skyjump.mp3'],
-      loop: true,
-      volume: 0.5,
-      sprite: {
-        theme: [0, 8300]
-      }
-    });
-    this.sounds = new Howl({
-      urls: ['sounds/disappointed.mp3'],
-      sprite: {
-        gameover: [0, 1800]
-      }
-    })
+    if (navigator.userAgent.match(/(android|iphone|ipad)/i)) {
+      this.mobile = true;
+      this.gameTextEl.addClass('mobile');
+    }
+
+    if (!this.mobile) {
+      this.themesound = new Howl({
+        urls: ['sounds/skyjump.mp3'],
+        loop: true,
+        volume: 0.5,
+        sprite: {
+          theme: [0, 8300]
+        }
+      });
+      this.sounds = new Howl({
+        urls: ['sounds/disappointed.mp3'],
+        sprite: {
+          gameover: [0, 1800]
+        }
+      });
+    }
 
     // Cache a bound onFrame since we need it each frame.
     this.onFrame = this.onFrame.bind(this);
@@ -62,6 +72,8 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
   Game.prototype.onScreenTouch = function() {
     if ( !this.isPlaying || this.showMenu ) {
       this.showMenu = false;
+      this.mainMenuEl.removeClass('showmenu');
+      this.hudEl.removeClass('showmenu');
       if ( !this.isPlaying ) {
         this.reset();
       }
@@ -73,6 +85,7 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
    */
   Game.prototype.reset = function() {
     this.elevation = 0;
+    this.oldElevation = 0;
     this.score = 0;
     this.scoreEl.text( 0 );
     this.elevationEl.text( 0 );
@@ -210,10 +223,6 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
    * Runs every frame. Calculates a delta and allows each game entity to update itself.
    */
   Game.prototype.onFrame = function() {
-    this.gameTextEl.toggleClass('gameover', !this.isPlaying);
-    this.mainMenuEl.toggleClass('showmenu', this.showMenu);
-    this.hudEl.toggleClass('showmenu', this.showMenu);
-
     if (!this.isPlaying) {
       requestAnimFrame(this.onFrame);
       return;
@@ -265,14 +274,20 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
       }
       var backgroundY = -(this.elevation * 0.2);
       // Check if we need to re-use background
-      backgroundY = backgroundY - 300 * Math.floor( this.elevation*0.8 / 300 + 1 );
+      backgroundY -= 300 * Math.floor( this.elevation*0.8 / 300 + 1 );
+      var oldBackgroundY = -(this.oldElevation * 0.2);
+      oldBackgroundY -= 300 * Math.floor( this.oldElevation*0.8 / 300 + 1 );
 
       // Scroll the background, but not as much as platforms, which will
       // create a parallax effect
-      this.backgroundEl.css(this.transform, 'translate3d(0px,' + backgroundY + 'px,0)');
-      /*
-      this.cityscapeEl.css(this.transform, 'translate3d(0px,' + (-(this.elevation * 0.75)) + 'px,0)');
-*/
+      if (backgroundY != oldBackgroundY) {
+        this.backgroundEl.css(this.transform, 'translate3d(0px,' + backgroundY + 'px,0)');
+        this.oldElevation = this.elevation;
+      }
+      if (!this.mobile) {
+        this.cityscapeEl.css(this.transform, 'translate3d(0px,' + (-(this.elevation * 0.75)) + 'px,0)');
+      }
+
       var self = this;
 
       this.forEachPlatform( function(p) {
@@ -313,7 +328,10 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
    * Stop the game and notify user that he has lost.
    */
   Game.prototype.gameover = function() {
-    this.sounds.play('gameover');
+    this.gameTextEl.addClass('gameover');
+    if (!this.mobile) {
+      this.sounds.play('gameover');
+    }
     this.freezeGame();
   };
 
@@ -324,9 +342,8 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
   Game.prototype.freezeGame = function() {
     this.isPlaying = false;
     this.el.addClass('frozen');
-    this.themesound.stop();
-    if (navigator.userAgent.match(/(android|iphone|ipad)/i)) {
-      this.gameTextEl.addClass('mobile');
+    if (!this.mobile) {
+      this.themesound.stop();
     }
   };
 
@@ -337,11 +354,11 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
     if (!this.isPlaying) {
       this.isPlaying = true; 
       this.el.removeClass('frozen');
-      if (navigator.userAgent.match(/(android|iphone|ipad)/i)) {
-        this.gameTextEl.removeClass('mobile');
-      }
+      this.gameTextEl.removeClass('gameover');
 
-      this.themesound.play('theme');
+      if (!this.mobile) {
+        this.themesound.play('theme');
+      }
 
       // Restart the onFrame loop
       this.lastFrame = +new Date() / 1000;

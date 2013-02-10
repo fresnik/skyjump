@@ -21,6 +21,7 @@ This game has been tested on:
 - Firefox 18 on Fedora 17
 - Chrome 24 on Windows 7
 - Firefox 18 on Windows 7
+- iPad (minimal testing)
 
 Note: the tilt orientation is reversed on some devices - not all devices are supported!
 

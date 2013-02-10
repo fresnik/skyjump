@@ -13,6 +13,8 @@ define(['controls'], function(controls) {
     this.game = game;
     this.pos = { x: 0, y: 0 };
     this.vel = { x: 0, y: 0 };
+    this.facing = -1;
+    this.oldFacing = 1;
   };
 
   Player.JUMP_DIST = 175;
@@ -45,10 +47,19 @@ define(['controls'], function(controls) {
     // Update player position
     this.el.css(transform, 'translate3d(' + this.pos.x + 'px,' + this.pos.y + 'px,0)');
 
-    this.el.toggleClass('walking', this.vel.x !== 0);
-    this.el.toggleClass('jumping', this.vel.y < 0);
-    this.el.toggleClass('movingLeft', this.vel.x < 0);
-    this.el.toggleClass('movingRight', this.vel.x > 0);
+    if (this.vel.x < 0) {
+      this.facing = -1;
+    }
+    else if (this.vel.x > 0) {
+      this.facing = 1;
+    }
+
+    // Only update class of player element if needed
+    if (this.facing != this.oldFacing) {
+      this.el.toggleClass('movingRight', this.facing > 0);
+      this.el.toggleClass('movingLeft', this.facing < 0);
+      this.oldFacing = this.facing;
+    }
   };
 
   /**

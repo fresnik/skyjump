@@ -175,10 +175,9 @@ html {
 }
 
 .platform {
-//  background-color: #33FF66;
   background: url('images/platform.png');
   position: absolute;
-  @include border-radius(5px);
+  @include border-radius(3px);
   border: 1px solid black;
 }
 
@@ -208,122 +207,10 @@ html {
   position: absolute;
   top: 0;
   width: 50px;
-  height: 60px;
+  height: 49px;
+  background: url('images/player.png') 0 0;
 
-  div {margin: 0; padding: 0;}
-  div div {background: #A4CA39; position: relative;}
-
-  .android{
-    height: 404px; width: 336px;
-    
-    @include transform-origin(0, 0);
-    @include transform(scale(0.15, 0.15));
-  }
-  .head{
-    width: 220px; height: 100px;
-    top: 32px;
-    left: 58px;
-    border: 3px solid black;
-    
-    @include border-radius(110px 110px 0 0);
-  }
-
-  .l_eye, .r_eye {
-    background: #fff;
-    width: 20px; height: 20px;
-    position: absolute; top: 42px;
-    
-    @include border-radius(10px);
-  }
-  .l_eye {left: 50px;}
-  .r_eye {right: 50px;}
-
-  .l_ant, .r_ant{
-    width: 6px; height: 50px;
-    position: absolute; top: -34px;
-    border: 2px solid black;
-    
-    @include border-radius(3px);
-  }
-  .l_ant {
-    left: 50px;
-    @include transform(rotate(-30deg));
-  }
-  .r_ant {
-    right: 50px;
-    @include transform(rotate(30deg));
-  }
-
-  .body{
-    width: 220px; height: 184px;
-    top: 40px;
-    left: 58px;
-    border: 3px solid black;
-    
-    @include border-radius(0 0 25px 25px);
-  }
-
-  .l_arm, .r_arm, .l_leg, .r_leg {
-    width: 50px; position: absolute;
-    border: 3px solid black;
-  }
-  .l_arm, .r_arm {
-    height: 150px;
-    @include transition(all 0.15s);
-    @include border-radius(25px);
-  }
-  .l_leg, .r_leg {
-    height: 100px; top: 162px;
-    @include transform-origin(50%, 25px);
-    @include border-radius(0 0 25px 25px);
-  }
-  .l_arm {left: -58px;}
-  .r_arm {right: -58px;}
-  .l_leg {left: 45px;}
-  .r_leg {right: 45px;}
-
-  &.walking .l_leg {
-    @include animation(player-walk-left 0.15s linear infinite alternate);
-  }
-
-  &.walking .r_leg {
-    @include animation(player-walk-right 0.15s 0.15s linear infinite alternate);
-  }
-
-  &.jumping .r_arm {
-    @include transform-origin(50%, 0);
-    @include transform(rotate(-180deg));
-  }
-
-  &.jumping .l_arm {
-    @include transform-origin(50%, 0);
-    @include transform(rotate(180deg));
-  }
-
-  &.movingLeft .head {
-    @include transform(rotate(25deg));
-  }
-
-  &.movingRight .head {
-    @include transform(rotate(-25deg));
-  }
-
-}
-
-@include keyframes(player-walk-left) {
-  from {
-    @include transform(rotate(0));
-  }
-  to {
-    @include transform(rotate(30deg));
-  }
-}
-
-@include keyframes(player-walk-right) {
-  from {
-    @include transform(rotate(0));
-  }
-  to {
-    @include transform(rotate(-30deg));
+  &.movingRight {
+    background: url('images/player.png') 50px 0;
   }
 }

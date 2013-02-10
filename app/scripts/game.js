@@ -62,8 +62,8 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
     this.scoreEl.text( 0 );
     this.elevationEl.text( 0 );
     this.difficulty = 0;
-    this.cityscapeEl.css(this.transform, 'translate(0px,0px)');
-    this.backgroundEl.css(this.transform, 'translate(0px,0px)');
+    this.cityscapeEl.css(this.transform, 'translate3d(0px,0px,0)');
+    this.backgroundEl.css(this.transform, 'translate3d(0px,0px,0)');
 
     // Remove all platforms from the world
     this.entities.forEach(function(e) { e.el.remove(); });
@@ -96,7 +96,7 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
       height: Platform.defaultHeight
     }));
     this.topmostPlatform = this.entities[0];
-    this.topmostPlatform.el.css(this.transform, 'translate(' + groundPlatform.x + 'px,' + groundPlatform.y + 'px)');
+    this.topmostPlatform.el.css(this.transform, 'translate3d(' + groundPlatform.x + 'px,' + groundPlatform.y + 'px,0)');
 
     // Place random platforms until we can reach the top
     // Also make sure we have the minimal number of visible platforms
@@ -144,7 +144,7 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
         });
 
     this.addPlatform(newPlatform);
-    newPlatform.el.css(this.transform, 'translate(' + newPlatformX + 'px,' + newPlatformY + 'px)');
+    newPlatform.el.css(this.transform, 'translate3d(' + newPlatformX + 'px,' + newPlatformY + 'px,0)');
     this.topmostPlatform = newPlatform;
 
     // Randomly add a spring on top of platform
@@ -155,7 +155,7 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
         y: newPlatformY
       });
       this.addSpring(newSpring);
-      newSpring.el.css(this.transform, 'translate(' + newSpring.pos.x + 'px,' + newSpring.pos.y + 'px)');
+      newSpring.el.css(this.transform, 'translate3d(' + newSpring.pos.x + 'px,' + newSpring.pos.y + 'px,0)');
     }
   };
 

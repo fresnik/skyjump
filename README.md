@@ -58,3 +58,7 @@ This is a list of features next on the TODO list that I didn't have time to impl
 - Scroll the world back up when player falls to their death before the game over screen
 - Use more CSS sprites for optimization
 - Permanent highscore (using local storage)
+
+## Try it!
+
+Hosted at [fresnik.pagekite.me](https://fresnik.pagekite.me/).

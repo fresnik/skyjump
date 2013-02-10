@@ -276,6 +276,12 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
           }
         }
       });
+      this.forEachSpring( function(s) {
+        // If the spring has gone blow the visible area, remove it from memory
+        if ( s.pos.y > self.viewport.y + self.height + 16 ) {
+          s.begone();
+        }
+      });
     }
 
     this.worldEl.css(this.transform, 'translate3d(0,' + (-this.viewport.y) + 'px,0)');

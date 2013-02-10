@@ -27,7 +27,8 @@ define([], function() {
       .on('keydown', this.onKeyDown.bind(this))
       .on('keyup', this.onKeyUp.bind(this))
       .on('deviceorientation', this.onOrientation.bind(this))
-      .on('touchstart', this.onTouch.bind(this));
+      .on('touchstart', this.onTouch.bind(this))
+      .on('mouseup', this.onTouch.bind(this));
   };
 
   asEvented.call(Controls.prototype);

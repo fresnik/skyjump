@@ -44,6 +44,8 @@ Note: the tilt orientation is reversed on some devices - not all devices are sup
   - Randomly placed horizontally on the platform
   - Have their own collision detection
   - Increases jump distance
+- Original soundtrack & gameover sound bite
+- CSS sprite on player
 
 ### Incomplete features
 
@@ -53,5 +55,4 @@ This is a list of features next on the TODO list that I didn't have time to impl
 - Vertically moving platforms (with a different texture)
 - Trampoline items, similar to springs but trigger a sommersault player animation
 - Scroll the world back up when player falls to their death before the game over screen
-- Use CSS sprites for optimization
-- Sound and music
+- Use more CSS sprites for optimization

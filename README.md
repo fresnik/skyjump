@@ -15,6 +15,7 @@ This game has been tested on:
 
 - Chrome 21 on MacOS X 10.5
 - Firefox 11 on MacOS X 10.5
+- Safari 5 on MacOS X 10.5
 - iPhone 5
 - Firefox 18 on Android 2.2
 - Chrome 24 on Fedora 17

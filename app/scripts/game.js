@@ -1,4 +1,4 @@
-/*global define, alert */
+/*global define, Howl */
 
 define(['controls', 'player', 'platform', 'spring', 'controls'],
   function(controls, Player, Platform, Spring, controls) {
@@ -38,6 +38,21 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
     this.cityscapeEl = this.el.find('.cityscape');
 
     this.player = new Player(this.el.find('.player'), this);
+
+    this.themesound = new Howl({
+      urls: ['sounds/skyjump.mp3'],
+      loop: true,
+      volume: 0.5,
+      sprite: {
+        theme: [0, 8300]
+      }
+    });
+    this.sounds = new Howl({
+      urls: ['sounds/disappointed.mp3'],
+      sprite: {
+        gameover: [0, 1800]
+      }
+    })
 
     // Cache a bound onFrame since we need it each frame.
     this.onFrame = this.onFrame.bind(this);
@@ -298,6 +313,7 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
    * Stop the game and notify user that he has lost.
    */
   Game.prototype.gameover = function() {
+    this.sounds.play('gameover');
     this.freezeGame();
   };
 
@@ -308,6 +324,7 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
   Game.prototype.freezeGame = function() {
     this.isPlaying = false;
     this.el.addClass('frozen');
+    this.themesound.stop();
     if (navigator.userAgent.match(/(android|iphone|ipad)/i)) {
       this.gameTextEl.addClass('mobile');
     }
@@ -323,6 +340,8 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
       if (navigator.userAgent.match(/(android|iphone|ipad)/i)) {
         this.gameTextEl.removeClass('mobile');
       }
+
+      this.themesound.play('theme');
 
       // Restart the onFrame loop
       this.lastFrame = +new Date() / 1000;

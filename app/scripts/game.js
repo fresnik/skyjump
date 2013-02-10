@@ -272,20 +272,25 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
       while ( this.platformCount < 2 * this.visiblePlatforms ) {
         this.addOnePlatform(false);
       }
-      var backgroundY = -(this.elevation * 0.2);
-      // Check if we need to re-use background
-      backgroundY -= 300 * Math.floor( this.elevation*0.8 / 300 + 1 );
-      var oldBackgroundY = -(this.oldElevation * 0.2);
-      oldBackgroundY -= 300 * Math.floor( this.oldElevation*0.8 / 300 + 1 );
 
-      // Scroll the background, but not as much as platforms, which will
+      // Scroll the background and cityscape separately on desktops to
       // create a parallax effect
+      if (!this.mobile) {
+        // Check if we need to re-use background
+        this.bgParallaxEffect = 0.2;
+        this.cityscapeEl.css(this.transform, 'translate3d(0px,' + (-(this.elevation * 0.75)) + 'px,0)');
+      }
+      else {
+        this.bgParallaxEffect = 1.0;
+      }
+      var backgroundY = -(this.elevation * this.bgParallaxEffect);
+      backgroundY -= 300 * Math.floor( this.elevation * (1 - this.bgParallaxEffect) / 300 + 1 );
+      var oldBackgroundY = -(this.oldElevation * this.bgParallaxEffect);
+      oldBackgroundY -= 300 * Math.floor( this.oldElevation * (1 - this.bgParallaxEffect) / 300 + 1 );
+
       if (backgroundY != oldBackgroundY) {
         this.backgroundEl.css(this.transform, 'translate3d(0px,' + backgroundY + 'px,0)');
         this.oldElevation = this.elevation;
-      }
-      if (!this.mobile) {
-        this.cityscapeEl.css(this.transform, 'translate3d(0px,' + (-(this.elevation * 0.75)) + 'px,0)');
       }
 
       var self = this;

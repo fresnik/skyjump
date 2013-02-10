@@ -56,3 +56,4 @@ This is a list of features next on the TODO list that I didn't have time to impl
 - Trampoline items, similar to springs but trigger a sommersault player animation
 - Scroll the world back up when player falls to their death before the game over screen
 - Use more CSS sprites for optimization
+- Permanent highscore (using local storage)

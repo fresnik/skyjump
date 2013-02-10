@@ -92,6 +92,7 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
     this.difficulty = 0;
     this.cityscapeEl.css(this.transform, 'translate3d(0px,0px,0)');
     this.backgroundEl.css(this.transform, 'translate3d(0px,0px,0)');
+    this.worldEl.css(this.transform, 'translate3d(0,0,0)');
 
     // Remove all platforms from the world
     this.entities.forEach(function(e) { e.el.remove(); });
@@ -317,9 +318,8 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
           s.begone();
         }
       });
+      this.worldEl.css(this.transform, 'translate3d(0,' + (-this.viewport.y) + 'px,0)');
     }
-
-    this.worldEl.css(this.transform, 'translate3d(0,' + (-this.viewport.y) + 'px,0)');
   };
 
   /**
@@ -334,9 +334,11 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
    */
   Game.prototype.gameover = function() {
     this.gameTextEl.addClass('gameover');
+    this.worldEl.addClass('gameover');
     if (!this.mobile) {
       this.sounds.play('gameover');
     }
+//    window.setTimeout(this.freezeGame.bind(this), 1000);
     this.freezeGame();
   };
 
@@ -360,6 +362,7 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
       this.isPlaying = true; 
       this.el.removeClass('frozen');
       this.gameTextEl.removeClass('gameover');
+      this.worldEl.removeClass('gameover');
 
       if (!this.mobile) {
         this.themesound.play('theme');

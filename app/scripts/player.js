@@ -4,7 +4,7 @@ define(['controls'], function(controls) {
 
   var PLAYER_SPEED = 300;
   var JUMP_VELOCITY = 1000;
-  var GRAVITY = 2500;
+  var GRAVITY = 2300;
 
   var transform = $.fx.cssPrefix + 'transform';
 

@@ -277,7 +277,6 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
       // Scroll the background and cityscape separately on desktops to
       // create a parallax effect
       if (!this.mobile) {
-        // Check if we need to re-use background
         this.bgParallaxEffect = 0.2;
         this.cityscapeEl.css(this.transform, 'translate3d(0px,' + (-(this.elevation * 0.75)) + 'px,0)');
       }
@@ -289,6 +288,7 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
       var oldBackgroundY = -(this.oldElevation * this.bgParallaxEffect);
       oldBackgroundY -= 300 * Math.floor( this.oldElevation * (1 - this.bgParallaxEffect) / 300 + 1 );
 
+      // Check if we need to re-use background
       if (backgroundY != oldBackgroundY) {
         this.backgroundEl.css(this.transform, 'translate3d(0px,' + backgroundY + 'px,0)');
         this.oldElevation = this.elevation;
@@ -334,11 +334,9 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
    */
   Game.prototype.gameover = function() {
     this.gameTextEl.addClass('gameover');
-    this.worldEl.addClass('gameover');
     if (!this.mobile) {
       this.sounds.play('gameover');
     }
-//    window.setTimeout(this.freezeGame.bind(this), 1000);
     this.freezeGame();
   };
 
@@ -362,7 +360,6 @@ define(['controls', 'player', 'platform', 'spring', 'controls'],
       this.isPlaying = true; 
       this.el.removeClass('frozen');
       this.gameTextEl.removeClass('gameover');
-      this.worldEl.removeClass('gameover');
 
       if (!this.mobile) {
         this.themesound.play('theme');

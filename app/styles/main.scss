@@ -59,21 +59,9 @@ html {
   }
 }
 
-.game {
+.gameover, .world {
   width: 100%;
   height: 100%;
-}
-
-.world {
-  height: 100%;
-  width: 100%;
-  @include transition(all 0.0s);
-  
-  &.gameover {
-//    @include transform(translate(0px, -240px));
-    @include transform(rotate(45));
-    @include transition(all 0.5s ease-in);
-  }
 }
 
 .gameoverarea {
